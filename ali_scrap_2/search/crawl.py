@@ -1,9 +1,9 @@
 from multiprocessing import Process
 from scrapy.crawler import CrawlerProcess
-from scrapy.conf import settings
-from ali_scrap.ali_scrap.spiders import ali_spider
-from models import Domain
-from ali_scrap.ali_scrap.spiders import ali_spider
+from scrapy.utils.project import get_project_settings
+from .spider import AliSpider
+
+settings = get_project_settings()
 
 class UrlCrawlerScript():
 
@@ -13,10 +13,7 @@ class UrlCrawlerScript():
         self.crawler.configure()
 
     def _crawl(self, url):
-        start_urls = []
-        start_urls.append(url)
-
-        self.crawler.crawl(ali_spider(start_urls))
+        self.crawler.crawl(AliSpider(url))
         self.crawler.start()
         self.crawler.stop()
 
