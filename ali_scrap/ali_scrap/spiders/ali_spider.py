@@ -4,8 +4,7 @@ class AliSpider(scrapy.Spider):
     name = 'ali'
 
     def __init__(self, *args, **kwargs):
-        self.url = kwargs.get('url')
-        self.start_urls = [self.url]
+        self.start_urls = ['https://www.alibaba.com/product-detail/Custom-UV-Long-sleeve-SPF-dry_62555868492.html?spm=a27aq.14005655.1_2.2.284932e8VRFOEz']
 
         super(AliSpider, self).__init__(*args, **kwargs)
 
