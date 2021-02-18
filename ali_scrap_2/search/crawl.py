@@ -2,27 +2,27 @@ from multiprocessing import Process
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from .spider import AliSpider
+from twisted.internet import reactor
 
-settings = get_project_settings()
 
-class UrlCrawlerScript():
+class UrlCrawlerScript(Process):
 
-    def __init__(self):
+    def __init__(self, spider):
+        Process.__init__(self)
+        settings = get_project_settings()
         self.crawler = CrawlerProcess(settings)
         self.crawler.install()
         self.crawler.configure()
+        self.spider = spider
 
-    def _crawl(self, url):
-        self.crawler.crawl(AliSpider(url))
+    def run(self, url):
+        self.crawler.crawl(self.spider)
         self.crawler.start()
-        self.crawler.stop()
+        reactor.run()
 
-    def crawl(self, url):
-        p = Process(target=self._crawl, args=[url])
-        p.start()
-        p.join()
-
-crawler = UrlCrawlerScript()
 
 def url_crawl(url):
-    crawler.crawl(url)
+    spider = AliSpider(url)
+    crawler = UrlCrawlerScript(spider)
+    crawler.start()
+    crawler.join()
